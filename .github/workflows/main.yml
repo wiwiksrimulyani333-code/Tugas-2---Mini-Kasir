@@ -1,0 +1,26 @@
+name: C++ CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Compiler
+      run: sudo apt-get update && sudo apt-get install -y g++
+
+    - name: Compile C++ Code
+      run: |
+        if [ -f main.cpp ]; then
+          g++ main.cpp -o kasir.exe
+        else
+          echo "File main.cpp tidak ditemukan!"
+          exit 1
+        fi
