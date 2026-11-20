@@ -1,26 +1,29 @@
-name: C++ CI
+
+name: Build EXE Mini Kasir
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Install Compiler
-      run: sudo apt-get update && sudo apt-get install -y g++
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
 
-    - name: Compile C++ Code
-      run: |
-        if [ -f main.cpp ]; then
-          g++ main.cpp -o kasir.exe
-        else
-          echo "File main.cpp tidak ditemukan!"
-          exit 1
-        fi
+      - name: Compile C++ to EXE
+        run: cl /EHsc /std:c++17 main.cpp /Fe:kasir.exe
+
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mini-Kasir-EXE
+          path: kasir.exe
